@@ -1,6 +1,6 @@
-# 6Companies30DaysChallenge
+6Companies30DaysChallenge
 
-**Overview**
+Overview
 
 Welcome to the "6 Companies 30 Days Challenge" repository, an intensive initiative designed by Arsh Goyal. The challenge focuses on honing your Data Structures and Algorithms (DSA) skills through a curated set of problems. It is a month-long coding journey to solve 90 most frequent and important questions asked by some of the top tech companies, helping to improve skills and prepare for interviews.
 
