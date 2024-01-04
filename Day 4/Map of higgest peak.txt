@@ -1,0 +1,63 @@
+class Solution {
+    int MAX_VALUE;
+    public int[][] highestPeak(int[][] isWater) {
+        int M = isWater.length;
+        int N = isWater[0].length;
+        MAX_VALUE=M*N;
+        int[][] heights = new int[M][N];
+        for(int[] height : heights){
+            Arrays.fill(height, MAX_VALUE);
+        }
+
+        int[][] dirs = new int[][]{
+            {0,1},
+            {0,-1},
+            {1,0},
+            {-1,0}
+        };
+
+        for(int r=0; r<M; r++){
+            for(int c=0; c<N; c++){
+                if(isWater[r][c] == 1) {
+                    heights[r][c] = 0;
+                } else {//land
+                    heights[r][c] = Math.min(
+                        r-1<0?MAX_VALUE:heights[r-1][c] + 1, 
+                        c-1<0?MAX_VALUE:heights[r][c-1] + 1
+                    );
+                }
+            }
+        }
+
+        for(int r=M-1; r>=0; r--){
+            for(int c=N-1; c>=0; c--){
+                if(isWater[r][c] == 1) {
+                    heights[r][c] = 0;
+                } else {//land
+                    heights[r][c] = min(
+                        r-1<0?MAX_VALUE:heights[r-1][c] + 1,
+                        r+1>=M?MAX_VALUE:heights[r+1][c] + 1,
+                        c-1<0?MAX_VALUE:heights[r][c-1] + 1,
+                        c+1>=N?MAX_VALUE:heights[r][c+1] + 1
+                    );
+                }
+            }
+        }
+
+        return heights;
+        
+    }
+
+    int min(int a, int b, int c, int d){
+        return Math.min(
+            a,
+            Math.min(
+                b,
+                Math.min(
+                    c,
+                    d
+                )
+            )
+        );
+    }
+}
