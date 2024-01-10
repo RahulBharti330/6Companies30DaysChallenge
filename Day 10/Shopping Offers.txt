@@ -1,0 +1,57 @@
+class Solution {
+    int min;
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        int n = price.size();
+        int curr[] = new int[n];
+        min=0;
+        for(int i=0;i<n;i++){
+            min = min + needs.get(i)*price.get(i);
+            curr[i] = needs.get(i);
+        }
+        find(0,special.size(),price,special,curr,min);
+        return min;
+    }
+
+    public void find(int ind,int m,List<Integer> price,List<List<Integer>> special,int needs[],int curr){
+        int n = needs.length;
+        min = Math.min(min,curr);
+        if(ind == m){
+            return;
+        }
+        if(isQuantityWithinLimits(special.get(ind),needs) && isDiscounted(special.get(ind),needs,price)){
+            int total=0;
+            for(int i=0;i<n;i++){
+                total = total + special.get(ind).get(i)*price.get(i);
+                needs[i] = needs[i] - special.get(ind).get(i);
+            }
+            find(ind,m,price,special,needs,curr-total + special.get(ind).get(n));
+            for(int i=0;i<n;i++){
+                needs[i]+=special.get(ind).get(i);
+            }
+        }
+        find(ind+1,m,price,special,needs,curr);
+    }
+
+    public boolean isQuantityWithinLimits(List<Integer> offer,int arr[]){
+        int n = arr.length;
+        boolean validItems = false, exceedsLimit = false;
+        for(int i=0;i<n;i++){
+            if(offer.get(i) > arr[i]){
+                exceedsLimit=true;
+                break;
+            }
+            if(offer.get(i)>0){
+                validItems=true;
+            }
+        }
+        return validItems && !exceedsLimit;
+    }
+    
+    public boolean isDiscounted(List<Integer> offer,int need[],List<Integer> price){
+        int total=0, n = need.length;
+        for(int i=0;i<n;i++){
+            total = total + offer.get(i)*price.get(i);
+        }
+        return total > offer.get(n);
+    }
+}
