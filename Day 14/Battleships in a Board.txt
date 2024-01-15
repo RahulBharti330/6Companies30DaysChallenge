@@ -1,0 +1,28 @@
+class Solution {
+    public int countBattleships(char[][] board) {
+        int n=board.length;
+        int m=board[0].length;
+        int count=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(board[i][j]=='X'){
+                    dfs(board,i,j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    private void dfs(char[][] board, int row, int col){
+         int n=board.length;
+         int m=board[0].length;
+        if(row<0 || row>=n || col<0 || col>=m || board[row][col]=='.'){
+            return;
+        }
+        board[row][col]='.';
+        dfs(board,row-1,col);
+        dfs(board,row+1,col);
+        dfs(board,row,col+1);
+        dfs(board,row,col-1);
+    }
+}

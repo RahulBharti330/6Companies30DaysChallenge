@@ -1,0 +1,52 @@
+class Frequency implements Comparable<Frequency>{
+    int count = 1;
+    String word;
+
+    public Frequency(String word){
+        this.word = word;
+    }
+
+    public int compareTo(Frequency input){
+        if(this.count != input.count){
+            return this.count - input.count;
+        }
+        // this part we're doing in reverse reverse so minHeap
+        return input.word.compareTo(this.word);
+    }
+}
+
+class Solution {
+    ///////// Pseudocode / thoughts //////////
+    //
+    // have Frequency class with count and implements comparable that takes care of count and the usual string.compareTo
+    // need a HashMap to keep track of Frequency Objects
+    // have a maxHeap
+    //    ... could reduce space by using a minHeap and maxHeap, but space complexity would still be k so linear at worst case
+    // fill an ArrayList<String> answer by polling k times on our maxHeap
+    //
+    ///////// Pseudocode / thoughts //////////
+    public List<String> topKFrequent(String[] words, int k) {
+        PriorityQueue<Frequency> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        HashMap<String,Frequency> map = new HashMap<>();
+
+        for(String word: words){
+            if(map.containsKey(word)){
+                map.get(word).count++;
+            }
+            else{
+                map.put(word,new Frequency(word));
+            }
+        }
+
+        for(Frequency freq : map.values()){
+            maxHeap.add(freq);
+        }
+
+        ArrayList<String> answer = new ArrayList<>();
+        for(int i = 0; i < k; i++){
+            answer.add(maxHeap.poll().word);
+        }
+
+        return answer;
+    }
+}
