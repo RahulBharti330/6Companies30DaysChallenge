@@ -1,0 +1,51 @@
+class Solution {   
+    private final static int mod = (int)1e9 + 7;
+    int[][] dp;
+    boolean[][] divisible; 
+    int[] nums;
+    int m, n;
+    public int specialPerm(int[] nums) {
+        n = nums.length;
+        m = (1 << n) - 1;
+        this.nums = nums;
+        dp = new int[n][1 << n];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        divisible = new boolean[n][n];
+        for (int i = 0; i < n; ++i){
+           for (int j = i + 1; j < n; ++j){
+              if (nums[i] % nums[j] == 0 || nums[j] % nums[i] == 0 ){
+                  divisible[i][j] = divisible[j][i] = true;
+              }
+           }            
+        }
+                
+        int result = 0;
+        for(int i = 0; i < n; i++){
+            result += dfs(i, 1 << i);
+            result %= mod;
+        }
+        
+        return result;
+    }
+    
+     int dfs(int pre, int mask){       
+        if(mask == m)
+            return 1;
+            
+        if(dp[pre][mask] != -1)
+            return dp[pre][mask];
+            
+        int result = 0;
+        int avaliable = (~mask) & m;
+        for(int s = avaliable; s > 0; s &= s -1){
+            int i = Integer.bitCount((s & (-s)) - 1);
+            if(divisible[pre][i]){
+                
+                result += dfs(i, mask | (1 << i));
+                result %= mod;
+            }
+        }
+        
+        return dp[pre][mask] = result;
+    }   
+}
