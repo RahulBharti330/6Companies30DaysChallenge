@@ -1,0 +1,42 @@
+class Solution {
+    public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
+        
+        Map<Integer,Integer> rowsWithReservations = new HashMap<>();
+        int ans=2*n;
+        int currentReservation=0;
+        int newReservation=0;
+        for (int [] reserved : reservedSeats) {
+            
+            currentReservation = rowsWithReservations.getOrDefault(reserved[0],0);
+            if (currentReservation==7) continue;
+
+            newReservation=currentReservation;
+            switch (reserved[1]) {
+                case 2:
+                case 3:
+                    newReservation|=4;
+                    break;
+                case 4:
+                case 5:
+                    newReservation|=6;
+                    break;
+                case 6:
+                case 7:
+                    newReservation|=3;
+                    break;
+                case 8:
+                case 9:
+                    newReservation|=1;
+                    break;
+                default:
+                    continue;
+            }
+            
+            if (newReservation!=currentReservation) {
+                if (currentReservation==0 || newReservation==7) ans--;
+                rowsWithReservations.put(reserved[0],newReservation);
+            }
+        }
+        return ans;
+    }
+}
