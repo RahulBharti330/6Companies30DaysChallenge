@@ -1,0 +1,73 @@
+class ThroneInheritance {
+
+    private class Node {
+        String name;
+        boolean isAlive;
+        List<Node> children;
+
+        public Node(String name) {
+            this.name = name;
+            this.isAlive = true;
+            this.children = new LinkedList<>();
+        }
+
+        public void addChild(Node child) {
+            this.children.add(child);
+        }
+
+        public void markAsDead() {
+            this.isAlive = false;
+        }
+
+        public List<Node> getChildren() {
+            return this.children;
+        }
+    }
+
+    private Node root;
+    private Map<String, Node> map;
+
+    public ThroneInheritance(String kingName) {
+        this.root = new Node(kingName);
+        this.map = new HashMap<>();
+
+        this.map.put(kingName, this.root);
+    }
+    
+    public void birth(String parentName, String childName) {
+        Node parentNode = this.map.get(parentName);
+        Node node = new Node(childName);
+        parentNode.addChild(node);
+        this.map.put(childName, node);
+    }
+    
+    public void death(String name) {
+        this.map.get(name).markAsDead();
+    }
+    
+    private void getInheritanceOrder(List<String> result, Node node) {
+        if (node.isAlive) {
+            result.add(node.name);
+        }
+        for (Node child : node.getChildren()) {
+            getInheritanceOrder(result, child);
+        }
+    }
+    
+    public List<String> getInheritanceOrder() {
+        List<String> result = new LinkedList<>();
+
+        // DFS on the tree
+        getInheritanceOrder(result, this.root);
+
+        return result;
+    }
+}
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance obj = new ThroneInheritance(kingName);
+ * obj.birth(parentName,childName);
+ * obj.death(name);
+ * List<String> param_3 = obj.getInheritanceOrder();
+ */
