@@ -1,0 +1,32 @@
+class Solution {
+    public int wordCount(String[] startWords, String[] targetWords) {
+        int result = 0;
+        int len = startWords.length;
+        Set<Integer> startWordsSet = new HashSet<>(len);
+        for (String startWord: startWords) {
+            int mask = 0;
+            char[] cs = startWord.toCharArray();
+            for(int i = 0; i < cs.length; ++i) 
+                mask |= 1 << (cs[i] - 96);
+            
+            startWordsSet.add(mask);
+        }
+
+        for (String targetWord: targetWords) {
+            int mask = 0;
+            char[] cs = targetWord.toCharArray();
+            int n = cs.length;
+            for(int i = 0; i < n; ++i) 
+                mask |= 1 << (cs[i] - 96);
+        
+             for(int i = 0; i < n; ++i){
+                int mask2 = mask & ~(1 << (cs[i] - 96));
+                if (startWordsSet.contains(mask2)) {
+                    ++result;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+}
