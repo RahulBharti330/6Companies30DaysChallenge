@@ -1,0 +1,61 @@
+class Solution {
+    public int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
+        int k = 0;
+        for(int[] query : queries) {
+            if(k < query[1]) k = query[1];
+        }
+        int[] queryIndex = new int[k + 1];
+        for(int[] query : queries) {
+            queryIndex[query[1]]++;
+        }
+        
+        int[] ans = new int[queries.length];
+
+        int[] orders = new int[nums.length];
+        for(int i = 0; i < nums.length; i++) {
+            orders[i] = i;
+        }
+        for(int j = 0; j < nums[0].length(); j++) {
+            if(j + 1 >= queryIndex.length) break;
+            
+            radixSort(nums, orders, j);
+            
+            if(queryIndex[j + 1] == 0) continue;
+            
+            for(int i = 0; i < queries.length; i++) {
+                if(queries[i][1] != j + 1) continue;
+                ans[i] = orders[queries[i][0] - 1];
+            }
+        }
+        return ans;
+    }
+    
+    private void radixSort(String[] nums, int[] orders, int digit) {
+        int strLen = nums[0].length();
+
+        int[] count = new int[10];
+        for(String num : nums) {
+            count[num.charAt(strLen - 1 - digit) - '0']++;
+        }
+        int startIndex = 0;
+        for(int i = 0; i < count.length; i++) {
+            int tmp = count[i];
+            count[i] = startIndex;
+            startIndex += tmp;
+        }
+        
+        String[] sorted = new String[nums.length];
+        int[] sortedIndex = new int[nums.length];
+        for(int i = 0; i < nums.length; i++) {
+            int index = nums[i].charAt(strLen - 1 - digit) - '0';
+            sorted[count[index]] = nums[i];
+            sortedIndex[count[index]] = orders[i];
+            count[index]++;
+        }
+        
+        for(int i = 0; i < nums.length; i++) {
+            nums[i] = sorted[i];
+            orders[i] = sortedIndex[i];
+        }
+    }
+}

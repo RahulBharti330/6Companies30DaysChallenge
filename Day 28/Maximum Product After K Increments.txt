@@ -1,0 +1,36 @@
+class Solution {
+    public int maximumProduct(int[] nums, int k) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        long[] pre = new long[n + 1];
+        for(int i = 0; i < n; i++)
+            pre[i + 1] = pre[i] + nums[i];
+        int i = 0;
+        for(; i < n; i++){
+            if((long)(i + 1)*nums[i] - pre[i + 1] > k){
+                break;
+            }
+        }
+        long diff = (long)i*nums[i - 1] - pre[i];
+        k -= diff;
+        int extraInc = k / i;
+        int rem = k % i;
+        int mod = (int) 1e9 + 7;
+        long res = 1;
+        for(int j = 0; j < i; j++){
+            if(rem > 0){
+                res *= nums[i - 1] + extraInc + 1;
+                rem--;
+            }
+            else{
+                res *= nums[i - 1] + extraInc;
+            }
+            res %= mod;
+        } 
+        for(; i < n; i++){
+            res *= nums[i];
+            res %= mod;
+        }
+        return (int)res;
+    }
+}
