@@ -1,0 +1,75 @@
+class WordDictionary {
+//     /** Initialize your data structure here. */
+//     public WordDictionary() {
+//     }
+//     /** Adds a word into the data structure. */
+//     public void addWord(String word) {
+//     }
+//     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+//     public boolean search(String word) {
+//     }
+    public class TrieNode {
+         String item;//此node表示的单词
+         TrieNode[] children;
+        public TrieNode(){
+            item  = "";
+            children = new TrieNode[26];
+        }
+    }
+
+    TrieNode root;
+    /** Initialize your data structure here. */   
+    public WordDictionary() {
+        root= new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        if(word==null ||  word.length()==0) return;
+        TrieNode curr = root;
+        for (char c : word.toCharArray()) {
+            if (curr.children[c - 'a'] == null) 
+                curr.children[c - 'a'] = new TrieNode();//内容是"" 空的
+            curr = curr.children[c - 'a'];
+        }
+        curr.item = word;
+    }
+
+/*********判断某个char是否在树中:node.children[c-'a'] == null ? */
+    
+    
+    // . 代表任何node/char
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    //have to make sure:the current character exist in the tree; and the rest of the chars should also exist in the children of that char's node.=> can use recursion
+    public boolean search(String word) {
+        if(word==null ||  word.length()==0)  return false;
+        return match(word.toCharArray(), 0, root);
+    }
+    
+    // Helper:单词和树同时遍历: 查看树的最后的node的item: 【第k个char是否在node中,是否match】recursion
+    private boolean match(char[] chs, int k, TrieNode node) {
+        //base case:trie遍历完了,直接查看最后那个node的item. get to the final char. if item exist, means successfully find the word. return true
+        if (k == chs.length) 
+            return !node.item.equals("");   
+        
+        //recursive case:- two cases: “是点”与“不是点”
+        if (chs[k] != '.') 
+            return node.children[chs[k] - 'a'] != null && match(chs, k + 1, node.children[chs[k] - 'a']);
+        
+        else { //可以走所有的random child. I can go to any child. so for each possible child:
+            for (int i = 0; i < node.children.length; i++) {
+                if (node.children[i] != null) {
+                    if (match(chs, k + 1, node.children[i])) 
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */

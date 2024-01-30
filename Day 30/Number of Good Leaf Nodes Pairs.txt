@@ -1,0 +1,33 @@
+class Solution {
+    private int d, ans = 0;
+    public int countPairs(TreeNode root, int distance) {
+        d = distance;
+        dfs(root);
+        return ans;
+    }
+
+    private int[] dfs(TreeNode node) {  // post order
+        // count数组长度为，便于表示最大距离为d的子节点数量
+        int[] count = new int[d+1];
+        if(node == null) {
+            return count;
+        }
+        if(node.left == null && node.right ==null) {  // reach leaf node
+            count[1] = 1;
+            return count;
+        }
+
+        int[] leftCount = dfs(node.left);
+        int[] rightCount = dfs(node.right);
+        for(int d1 = 1; d1<= d; d1++) {
+            for(int d2 = 1; d1+d2<=d; d2++) {
+                ans += leftCount[d1] * rightCount[d2];
+            }
+        }
+
+        for(int i=2; i<=d; i++) {
+            count[i] = leftCount[i-1] + rightCount[i-1];
+        }
+        return count;
+    }
+}
